@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Boletim de Liminares</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f0f2f5;
+      color: #333;
+      min-height: 100vh;
+    }
+    header {
+      background: linear-gradient(135deg, #1a3a5c, #2d6a9f);
+      color: white;
+      padding: 20px 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+    header h1 { font-size: 1.6rem; font-weight: 700; letter-spacing: 0.5px; }
+    header span { font-size: 0.85rem; opacity: 0.8; }
+    .container { max-width: 900px; margin: 30px auto; padding: 0 20px; }
+    #token-section {
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 24px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+      border-left: 4px solid #2d6a9f;
+    }
+    #token-section h3 { margin-bottom: 10px; color: #1a3a5c; font-size: 0.95rem; }
+    .token-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+    .token-row input {
+      flex: 1; min-width: 200px;
+      padding: 8px 12px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      font-family: monospace;
+    }
+    .token-status { font-size: 0.8rem; color: #666; margin-top: 6px; }
+    .token-status.ok { color: #2e7d32; }
+    .token-status.err { color: #c62828; }
+    .add-form {
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 24px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    }
+    .add-form h2 { font-size: 1rem; margin-bottom: 14px; color: #1a3a5c; }
+    .form-row { display: flex; gap: 10px; flex-wrap: wrap; }
+    .form-row input {
+      padding: 9px 13px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      transition: border-color 0.2s;
+    }
+    .form-row input:focus { outline: none; border-color: #2d6a9f; }
+    #inp-numero { flex: 2; min-width: 200px; font-family: monospace; }
+    #inp-nome { flex: 3; min-width: 180px; }
+    .btn {
+      padding: 9px 18px;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .btn:active { transform: scale(0.97); }
+    .btn-primary { background: #2d6a9f; color: white; }
+    .btn-primary:hover { background: #1a5280; }
+    .btn-danger { background: #e53935; color: white; padding: 5px 12px; font-size: 0.8rem; }
+    .btn-danger:hover { background: #b71c1c; }
+    .btn-sm { padding: 5px 12px; font-size: 0.82rem; }
+    .list-section {
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    }
+    .list-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .list-header h2 { font-size: 1rem; color: #1a3a5c; }
+    .count-badge {
+      background: #e8f0fe;
+      color: #1a3a5c;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+    #search-input {
+      padding: 7px 12px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 0.88rem;
+      width: 220px;
+    }
+    #search-input:focus { outline: none; border-color: #2d6a9f; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+    thead th {
+      text-align: left;
+      padding: 8px 10px;
+      border-bottom: 2px solid #e0e0e0;
+      color: #555;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    tbody tr { border-bottom: 1px solid #f0f0f0; transition: background 0.15s; }
+    tbody tr:hover { background: #f7f9ff; }
+    tbody td { padding: 9px 10px; vertical-align: middle; }
+    td.num { font-family: monospace; font-size: 0.82rem; color: #555; }
+    td.nome { font-weight: 500; }
+    td.actions { text-align: right; white-space: nowrap; }
+    .empty-state { text-align: center; padding: 30px; color: #999; font-size: 0.9rem; }
+    #toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #323232;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.3s, transform 0.3s;
+      pointer-events: none;
+      z-index: 999;
+      max-width: 320px;
+    }
+    #toast.show { opacity: 1; transform: translateY(0); }
+    #toast.success { background: #2e7d32; }
+    #toast.error { background: #c62828; }
+    #loading {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(255,255,255,0.7);
+      z-index: 900;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      color: #1a3a5c;
+      font-weight: 600;
+    }
+    #loading.show { display: flex; }
+    .spinner {
+      width: 28px; height: 28px;
+      border: 3px solid #cce0f5;
+      border-top-color: #2d6a9f;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-right: 12px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    #confirm-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      z-index: 950;
+      align-items: center;
+      justify-content: center;
+    }
+    #confirm-modal.show { display: flex; }
+    .modal-box {
+      background: white;
+      border-radius: 10px;
+      padding: 28px 30px;
+      max-width: 380px;
+      width: 90%;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    }
+    .modal-box h3 { margin-bottom: 10px; color: #c62828; }
+    .modal-box p { font-size: 0.9rem; margin-bottom: 20px; color: #555; }
+    .modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
+    .btn-secondary { background: #eee; color: #333; }
+    .btn-secondary:hover { background: #ddd; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>&#9878; Boletim de Liminares</h1>
+  <span id="header-count"></span>
+</header>
+
+<div id="loading"><div class="spinner"></div> Salvando...</div>
+<div id="toast"></div>
+
+<div id="confirm-modal">
+  <div class="modal-box">
+    <h3>Remover processo?</h3>
+    <p id="confirm-text"></p>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeConfirm()">Cancelar</button>
+      <button class="btn btn-danger" onclick="confirmRemove()">Remover</button>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <div id="token-section">
+    <h3>Chave GitHub (necessaria para salvar alteracoes)</h3>
+    <div class="token-row">
+      <input type="password" id="gh-token" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" autocomplete="off">
+      <button class="btn btn-primary btn-sm" onclick="saveToken()">Salvar Chave</button>
+      <button class="btn btn-secondary btn-sm" onclick="clearToken()">Limpar</button>
+    </div>
+    <div class="token-status" id="token-status">Nenhuma chave configurada.</div>
+  </div>
+
+  <div class="add-form">
+    <h2>Adicionar Processo</h2>
+    <div class="form-row">
+      <input type="text" id="inp-numero" placeholder="Ex: 0012345-67.2026.8.17.2001" oninput="formatNumero(this)">
+      <input type="text" id="inp-nome" placeholder="Identificador (ex: (5A) CARLOS)">
+      <button class="btn btn-primary" onclick="addProcesso()">Adicionar</button>
+    </div>
+    <div id="add-error" style="color:#c62828;font-size:0.82rem;margin-top:8px;"></div>
+  </div>
+
+  <div class="list-section">
+    <div class="list-header">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <h2>Processos monitorados</h2>
+        <span class="count-badge" id="count-badge">0</span>
+      </div>
+      <input type="text" id="search-input" placeholder="Buscar por numero ou nome..." oninput="renderList()">
+    </div>
+    <div id="list-container">
+      <div class="empty-state">Carregando...</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const REPO = 'brunovot/tjpe-monitor';
+const FILE = 'processos.json';
+const API  = 'https://api.github.com';
+
+let processos = [];
+let fileSha   = '';
+let pendingRemoveIndex = null;
+
+function getToken() { return localStorage.getItem('gh_token') || ''; }
+
+function saveToken() {
+  const v = document.getElementById('gh-token').value.trim();
+  if (!v) { showToast('Digite um token.', 'error'); return; }
+  localStorage.setItem('gh_token', v);
+  document.getElementById('gh-token').value = '';
+  updateTokenStatus();
+  showToast('Chave salva.', 'success');
+  loadData();
+}
+
+function clearToken() {
+  localStorage.removeItem('gh_token');
+  updateTokenStatus();
+  showToast('Chave removida.');
+}
+
+function updateTokenStatus() {
+  const t = getToken();
+  const el = document.getElementById('token-status');
+  if (t) {
+    el.textContent = 'Chave configurada (' + t.slice(0,10) + '...)';
+    el.className = 'token-status ok';
+  } else {
+    el.textContent = 'Nenhuma chave configurada. Apenas leitura.';
+    el.className = 'token-status err';
+  }
+}
+
+async function ghGet(path) {
+  const headers = { 'Accept': 'application/vnd.github+json' };
+  if (getToken()) headers['Authorization'] = 'Bearer ' + getToken();
+  const r = await fetch(API + path, { headers });
+  if (!r.ok) throw new Error('HTTP ' + r.status);
+  return r.json();
+}
+
+async function ghPut(path, body) {
+  const headers = {
+    'Accept': 'application/vnd.github+json',
+    'Authorization': 'Bearer ' + getToken(),
+    'Content-Type': 'application/json'
+  };
+  const r = await fetch(API + path, { method: 'PUT', headers, body: JSON.stringify(body) });
+  if (!r.ok) {
+    const err = await r.json().catch(() => ({}));
+    throw new Error((err.message || 'Erro') + ' (HTTP ' + r.status + ')');
+  }
+  return r.json();
+}
+
+async function loadData() {
+  try {
+    const data = await ghGet('/repos/' + REPO + '/contents/' + FILE);
+    fileSha = data.sha;
+    const json = JSON.parse(atob(data.content.replace(/
+/g, '')));
+    processos = json.processos || [];
+    renderList();
+  } catch(e) {
+    document.getElementById('list-container').innerHTML =
+      '<div class="empty-state">Erro ao carregar: ' + e.message + '</div>';
+  }
+}
+
+async function saveData() {
+  if (!getToken()) { showToast('Configure uma chave GitHub para salvar.', 'error'); return false; }
+  setLoading(true);
+  try {
+    const content = btoa(unescape(encodeURIComponent(
+      JSON.stringify({ processos }, null, 2)
+    )));
+    const result = await ghPut('/repos/' + REPO + '/contents/' + FILE, {
+      message: 'Boletim: atualiza processos.json via interface web',
+      content,
+      sha: fileSha
+    });
+    fileSha = result.content.sha;
+    return true;
+  } catch(e) {
+    showToast('Erro ao salvar: ' + e.message, 'error');
+    return false;
+  } finally {
+    setLoading(false);
+  }
+}
+
+function formatNumero(input) {
+  let v = input.value.replace(/D/g, '');
+  if (v.length > 7)  v = v.slice(0,7) + '-' + v.slice(7);
+  if (v.length > 10) v = v.slice(0,10) + '.' + v.slice(10);
+  if (v.length > 15) v = v.slice(0,15) + '.' + v.slice(15);
+  if (v.length > 17) v = v.slice(0,17) + '.' + v.slice(17);
+  if (v.length > 20) v = v.slice(0,20) + '.' + v.slice(20);
+  if (v.length > 25) v = v.slice(0,25);
+  input.value = v;
+}
+
+function validarNumero(n) {
+  return /^d{7}-d{2}.d{4}.d.d{2}.d{4}$/.test(n);
+}
+
+async function addProcesso() {
+  const numero = document.getElementById('inp-numero').value.trim();
+  const nome   = document.getElementById('inp-nome').value.trim();
+  const errEl  = document.getElementById('add-error');
+  errEl.textContent = '';
+  if (!numero) { errEl.textContent = 'Informe o numero do processo.'; return; }
+  if (!validarNumero(numero)) {
+    errEl.textContent = 'Formato invalido. Use: 0000000-00.0000.0.00.0000';
+    return;
+  }
+  if (!nome) { errEl.textContent = 'Informe um identificador/nome.'; return; }
+  if (processos.some(p => p.numero === numero)) {
+    errEl.textContent = 'Esse processo ja esta na lista.';
+    return;
+  }
+  processos.push({ numero, nome });
+  const ok = await saveData();
+  if (ok) {
+    document.getElementById('inp-numero').value = '';
+    document.getElementById('inp-nome').value   = '';
+    renderList();
+    showToast('Processo adicionado!', 'success');
+  } else {
+    processos.pop();
+  }
+}
+
+function askRemove(idx) {
+  const p = processos[idx];
+  pendingRemoveIndex = idx;
+  document.getElementById('confirm-text').textContent =
+    'Deseja remover ' + p.nome + ' (' + p.numero + ') da lista de monitoramento?';
+  document.getElementById('confirm-modal').classList.add('show');
+}
+
+function closeConfirm() {
+  pendingRemoveIndex = null;
+  document.getElementById('confirm-modal').classList.remove('show');
+}
+
+async function confirmRemove() {
+  const idx = pendingRemoveIndex;
+  closeConfirm();
+  if (idx === null) return;
+  const removed = processos.splice(idx, 1)[0];
+  const ok = await saveData();
+  if (ok) {
+    renderList();
+    showToast('Processo removido: ' + removed.nome, 'success');
+  } else {
+    processos.splice(idx, 0, removed);
+  }
+}
+
+function renderList() {
+  const q = (document.getElementById('search-input').value || '').toLowerCase();
+  const filtered = processos
+    .map((p, i) => ({ ...p, idx: i }))
+    .filter(p => !q || p.numero.toLowerCase().includes(q) || p.nome.toLowerCase().includes(q));
+  const n = processos.length;
+  document.getElementById('count-badge').textContent = n + ' processo' + (n !== 1 ? 's' : '');
+  document.getElementById('header-count').textContent = n + ' processo' + (n !== 1 ? 's' : '') + ' monitorado' + (n !== 1 ? 's' : '');
+  if (!filtered.length) {
+    document.getElementById('list-container').innerHTML =
+      '<div class="empty-state">' + (q ? 'Nenhum resultado para "' + q + '".' : 'Nenhum processo cadastrado.') + '</div>';
+    return;
+  }
+  let html = '<table><thead><tr><th>#</th><th>Numero do Processo</th><th>Nome / Identificador</th><th></th></tr></thead><tbody>';
+  filtered.forEach((p, i) => {
+    html += '<tr>' +
+      '<td style="color:#aaa;font-size:0.8rem;width:30px;">' + (i+1) + '</td>' +
+      '<td class="num">' + esc(p.numero) + '</td>' +
+      '<td class="nome">' + esc(p.nome) + '</td>' +
+      '<td class="actions"><button class="btn btn-danger" onclick="askRemove(' + p.idx + ')">Remover</button></td>' +
+      '</tr>';
+  });
+  html += '</tbody></table>';
+  document.getElementById('list-container').innerHTML = html;
+}
+
+function esc(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+let toastTimer;
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'show' + (type ? ' ' + type : '');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { t.className = ''; }, 3200);
+}
+
+function setLoading(v) {
+  document.getElementById('loading').classList.toggle('show', v);
+}
+
+updateTokenStatus();
+loadData();
+
+document.getElementById('confirm-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeConfirm();
+});
+
+document.getElementById('inp-nome').addEventListener('keydown', e => {
+  if (e.key === 'Enter') addProcesso();
+});
+</script>
+</body>
+</html>
