@@ -5,579 +5,397 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Boletim de Liminares</title>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: #f0f2f5;
-      color: #333;
-      min-height: 100vh;
-    }
-    header {
-      background: linear-gradient(135deg, #1a3a5c, #2d6a9f);
-      color: white;
-      padding: 20px 30px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-    }
-    header h1 { font-size: 1.6rem; font-weight: 700; letter-spacing: 0.5px; }
-    header span { font-size: 0.85rem; opacity: 0.8; }
-    .container { max-width: 980px; margin: 30px auto; padding: 0 20px; }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:#f0f2f5;color:#333;min-height:100vh}
+    header{background:linear-gradient(135deg,#1a3a5c,#2d6a9f);color:#fff;padding:18px 30px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+    header h1{font-size:1.5rem;font-weight:700}
+    #hdr-count{font-size:.85rem;opacity:.8}
+    .container{max-width:1020px;margin:28px auto;padding:0 20px}
+    .card{background:#fff;border-radius:10px;padding:20px 24px;margin-bottom:22px;box-shadow:0 1px 4px rgba(0,0,0,.1)}
 
     /* Token */
-    #token-section {
-      background: white;
-      border-radius: 10px;
-      padding: 20px;
-      margin-bottom: 24px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
-      border-left: 4px solid #2d6a9f;
-    }
-    #token-section h3 { margin-bottom: 10px; color: #1a3a5c; font-size: 0.95rem; }
-    .token-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-    .token-row input {
-      flex: 1; min-width: 200px;
-      padding: 8px 12px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      font-size: 0.9rem;
-      font-family: monospace;
-    }
-    .token-status { font-size: 0.8rem; color: #666; margin-top: 6px; }
-    .token-status.ok { color: #2e7d32; }
-    .token-status.err { color: #c62828; }
+    #token-section{border-left:4px solid #2d6a9f}
+    #token-section h3{font-size:.9rem;color:#1a3a5c;margin-bottom:10px}
+    .token-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    .token-row input{flex:1;min-width:220px;padding:8px 12px;border:1px solid #ccc;border-radius:6px;font-family:monospace;font-size:.88rem}
+    #token-status{font-size:.78rem;margin-top:6px;color:#888}
+    #token-status.ok{color:#2e7d32}
+    #token-status.err{color:#c62828}
 
     /* Add form */
-    .add-form {
-      background: white;
-      border-radius: 10px;
-      padding: 22px 24px;
-      margin-bottom: 24px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
-    }
-    .add-form h2 { font-size: 1rem; margin-bottom: 16px; color: #1a3a5c; }
-    .form-grid {
-      display: grid;
-      grid-template-columns: 2fr 1fr 2fr;
-      gap: 12px;
-      margin-bottom: 12px;
-    }
-    @media (max-width: 680px) {
-      .form-grid { grid-template-columns: 1fr; }
-    }
-    .field-group { display: flex; flex-direction: column; gap: 4px; }
-    .field-group label {
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: #666;
-      text-transform: uppercase;
-      letter-spacing: 0.4px;
-    }
-    .field-group input {
-      padding: 9px 13px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      font-size: 0.9rem;
-      transition: border-color 0.2s, box-shadow 0.2s;
-      width: 100%;
-    }
-    .field-group input:focus {
-      outline: none;
-      border-color: #2d6a9f;
-      box-shadow: 0 0 0 3px rgba(45,106,159,0.12);
-    }
-    #inp-numero { font-family: monospace; }
-    .form-actions { display: flex; justify-content: flex-end; }
-    .btn {
-      padding: 9px 20px;
-      border: none;
-      border-radius: 6px;
-      font-size: 0.9rem;
-      cursor: pointer;
-      font-weight: 600;
-      transition: background 0.2s, transform 0.1s;
-    }
-    .btn:active { transform: scale(0.97); }
-    .btn-primary { background: #2d6a9f; color: white; }
-    .btn-primary:hover { background: #1a5280; }
-    .btn-danger { background: #e53935; color: white; padding: 5px 12px; font-size: 0.8rem; }
-    .btn-danger:hover { background: #b71c1c; }
-    .btn-sm { padding: 5px 12px; font-size: 0.82rem; }
-    .btn-secondary { background: #eee; color: #333; }
-    .btn-secondary:hover { background: #ddd; }
-    #add-error { color: #c62828; font-size: 0.82rem; margin-top: 4px; }
+    .add-form h2{font-size:.95rem;color:#1a3a5c;margin-bottom:14px}
+    .form-grid{display:grid;grid-template-columns:2.2fr .9fr 2.2fr;gap:12px;margin-bottom:12px}
+    @media(max-width:680px){.form-grid{grid-template-columns:1fr}}
+    .field label{display:block;font-size:.72rem;font-weight:700;color:#666;text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px}
+    .field input{width:100%;padding:9px 12px;border:1px solid #ccc;border-radius:6px;font-size:.9rem;transition:border-color .2s,box-shadow .2s}
+    .field input:focus{outline:none;border-color:#2d6a9f;box-shadow:0 0 0 3px rgba(45,106,159,.12)}
+    #inp-numero{font-family:monospace}
+    .form-footer{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+    #add-error{font-size:.8rem;color:#c62828}
+
+    /* Buttons */
+    .btn{padding:9px 18px;border:none;border-radius:6px;font-size:.88rem;font-weight:600;cursor:pointer;transition:background .18s,transform .1s}
+    .btn:active{transform:scale(.97)}
+    .btn-primary{background:#2d6a9f;color:#fff}
+    .btn-primary:hover{background:#1a5280}
+    .btn-sm{padding:6px 14px;font-size:.82rem}
+    .btn-secondary{background:#eee;color:#333}
+    .btn-secondary:hover{background:#ddd}
+    .btn-danger{background:#e53935;color:#fff;padding:5px 13px;font-size:.8rem}
+    .btn-danger:hover{background:#b71c1c}
 
     /* List */
-    .list-section {
-      background: white;
-      border-radius: 10px;
-      padding: 20px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
-    }
-    .list-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 14px;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-    .list-header h2 { font-size: 1rem; color: #1a3a5c; }
-    .count-badge {
-      background: #e8f0fe;
-      color: #1a3a5c;
-      padding: 3px 10px;
-      border-radius: 20px;
-      font-size: 0.82rem;
-      font-weight: 600;
-    }
-    #search-input {
-      padding: 7px 12px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      font-size: 0.88rem;
-      width: 240px;
-    }
-    #search-input:focus { outline: none; border-color: #2d6a9f; }
-    table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
-    thead th {
-      text-align: left;
-      padding: 8px 10px;
-      border-bottom: 2px solid #e0e0e0;
-      color: #555;
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      white-space: nowrap;
-    }
-    tbody tr { border-bottom: 1px solid #f0f0f0; transition: background 0.15s; }
-    tbody tr:hover { background: #f7f9ff; }
-    tbody td { padding: 9px 10px; vertical-align: middle; }
-    td.num { font-family: monospace; font-size: 0.82rem; color: #555; white-space: nowrap; }
-    td.vara {
-      font-size: 0.82rem;
-      color: #1a3a5c;
-      font-weight: 600;
-      white-space: nowrap;
-    }
-    td.cliente { font-weight: 500; }
-    td.actions { text-align: right; white-space: nowrap; }
-    .empty-state { text-align: center; padding: 30px; color: #999; font-size: 0.9rem; }
-    .vara-badge {
-      display: inline-block;
-      background: #e8f0fe;
-      color: #1a3a5c;
-      padding: 2px 8px;
-      border-radius: 4px;
-      font-size: 0.78rem;
-      font-weight: 700;
-      letter-spacing: 0.3px;
-    }
+    .list-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px}
+    .list-header h2{font-size:.95rem;color:#1a3a5c}
+    .badge{background:#e8f0fe;color:#1a3a5c;padding:2px 10px;border-radius:20px;font-size:.8rem;font-weight:700}
+    #search-input{padding:7px 12px;border:1px solid #ccc;border-radius:6px;font-size:.85rem;width:260px}
+    #search-input:focus{outline:none;border-color:#2d6a9f}
+
+    table{width:100%;border-collapse:collapse;font-size:.87rem}
+    thead th{text-align:left;padding:8px 10px;border-bottom:2px solid #e8e8e8;color:#555;font-size:.73rem;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap}
+    tbody tr{border-bottom:1px solid #f2f2f2;transition:background .12s}
+    tbody tr:hover{background:#f5f8ff}
+    td{padding:9px 10px;vertical-align:middle}
+    td.n{color:#aaa;font-size:.78rem;width:26px}
+    td.vara{white-space:nowrap}
+    .vara-chip{display:inline-block;background:#e8f0fe;color:#1a3a5c;padding:2px 9px;border-radius:5px;font-size:.78rem;font-weight:700}
+    td.cliente{font-weight:500}
+    td.num{font-family:monospace;font-size:.8rem;color:#666;white-space:nowrap}
+    td.act{text-align:right;white-space:nowrap}
+    .empty{text-align:center;padding:32px;color:#aaa;font-size:.9rem}
 
     /* Toast */
-    #toast {
-      position: fixed;
-      bottom: 24px;
-      right: 24px;
-      background: #323232;
-      color: white;
-      padding: 12px 20px;
-      border-radius: 8px;
-      font-size: 0.88rem;
-      opacity: 0;
-      transform: translateY(10px);
-      transition: opacity 0.3s, transform 0.3s;
-      pointer-events: none;
-      z-index: 999;
-      max-width: 320px;
-    }
-    #toast.show { opacity: 1; transform: translateY(0); }
-    #toast.success { background: #2e7d32; }
-    #toast.error { background: #c62828; }
+    #toast{position:fixed;bottom:22px;right:22px;background:#323232;color:#fff;padding:11px 18px;border-radius:8px;font-size:.86rem;opacity:0;transform:translateY(8px);transition:opacity .28s,transform .28s;pointer-events:none;z-index:999;max-width:300px}
+    #toast.show{opacity:1;transform:translateY(0)}
+    #toast.ok{background:#2e7d32}
+    #toast.err{background:#c62828}
 
-    /* Loading */
-    #loading {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(255,255,255,0.7);
-      z-index: 900;
-      align-items: center;
-      justify-content: center;
-      font-size: 1rem;
-      color: #1a3a5c;
-      font-weight: 600;
-    }
-    #loading.show { display: flex; }
-    .spinner {
-      width: 28px; height: 28px;
-      border: 3px solid #cce0f5;
-      border-top-color: #2d6a9f;
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-      margin-right: 12px;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
+    /* Loading overlay */
+    #overlay{display:none;position:fixed;inset:0;background:rgba(255,255,255,.65);z-index:900;align-items:center;justify-content:center;font-size:.95rem;color:#1a3a5c;font-weight:600}
+    #overlay.show{display:flex}
+    .spin{width:26px;height:26px;border:3px solid #cce0f5;border-top-color:#2d6a9f;border-radius:50%;animation:spin .75s linear infinite;margin-right:10px}
+    @keyframes spin{to{transform:rotate(360deg)}}
 
-    /* Confirm modal */
-    #confirm-modal {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.45);
-      z-index: 950;
-      align-items: center;
-      justify-content: center;
-    }
-    #confirm-modal.show { display: flex; }
-    .modal-box {
-      background: white;
-      border-radius: 10px;
-      padding: 28px 30px;
-      max-width: 400px;
-      width: 90%;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.2);
-    }
-    .modal-box h3 { margin-bottom: 10px; color: #c62828; }
-    .modal-box p { font-size: 0.9rem; margin-bottom: 20px; color: #555; line-height: 1.5; }
-    .modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
+    /* Modal */
+    #modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:950;align-items:center;justify-content:center}
+    #modal.show{display:flex}
+    .mbox{background:#fff;border-radius:10px;padding:26px 28px;max-width:400px;width:92%;box-shadow:0 8px 32px rgba(0,0,0,.2)}
+    .mbox h3{color:#c62828;margin-bottom:10px}
+    .mbox p{font-size:.88rem;color:#555;margin-bottom:18px;line-height:1.55}
+    .mact{display:flex;gap:10px;justify-content:flex-end}
   </style>
 </head>
 <body>
 
 <header>
   <h1>&#9878; Boletim de Liminares</h1>
-  <span id="header-count"></span>
+  <span id="hdr-count"></span>
 </header>
 
-<div id="loading"><div class="spinner"></div> Salvando...</div>
+<div id="overlay"><div class="spin"></div>Salvando...</div>
 <div id="toast"></div>
 
-<div id="confirm-modal">
-  <div class="modal-box">
+<div id="modal">
+  <div class="mbox">
     <h3>Remover processo?</h3>
-    <p id="confirm-text"></p>
-    <div class="modal-actions">
-      <button class="btn btn-secondary" onclick="closeConfirm()">Cancelar</button>
-      <button class="btn btn-danger" onclick="confirmRemove()">Remover</button>
+    <p id="modal-text"></p>
+    <div class="mact">
+      <button class="btn btn-secondary btn-sm" onclick="closeModal()">Cancelar</button>
+      <button class="btn btn-danger" onclick="confirmRemove()">Sim, remover</button>
     </div>
   </div>
 </div>
 
 <div class="container">
 
-  <div id="token-section">
-    <h3>Chave GitHub (necessaria para salvar alteracoes)</h3>
+  <!-- Token -->
+  <div class="card" id="token-section">
+    <h3>Chave GitHub (necessaria para adicionar ou remover processos)</h3>
     <div class="token-row">
       <input type="password" id="gh-token" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" autocomplete="off">
-      <button class="btn btn-primary btn-sm" onclick="saveToken()">Salvar Chave</button>
+      <button class="btn btn-primary btn-sm" onclick="saveToken()">Salvar</button>
       <button class="btn btn-secondary btn-sm" onclick="clearToken()">Limpar</button>
     </div>
-    <div class="token-status" id="token-status">Nenhuma chave configurada.</div>
+    <div id="token-status" class="err">Nenhuma chave configurada. Os processos sao exibidos somente para leitura.</div>
   </div>
 
-  <div class="add-form">
+  <!-- Add form -->
+  <div class="card add-form">
     <h2>Adicionar Processo</h2>
     <div class="form-grid">
-      <div class="field-group">
+      <div class="field">
         <label>Numero do Processo</label>
-        <input type="text" id="inp-numero" placeholder="0000000-00.0000.0.00.0000" oninput="formatNumero(this)">
+        <input type="text" id="inp-numero" placeholder="0000000-00.0000.0.00.0000" oninput="fmtNumero(this)">
       </div>
-      <div class="field-group">
+      <div class="field">
         <label>Vara</label>
-        <input type="text" id="inp-vara" placeholder="Ex: 3A, 11B, VC1">
+        <input type="text" id="inp-vara" placeholder="Ex: 3A">
       </div>
-      <div class="field-group">
+      <div class="field">
         <label>Nome do Cliente</label>
         <input type="text" id="inp-cliente" placeholder="Ex: CARLOS EDUARDO CALADO">
       </div>
     </div>
-    <div id="add-error"></div>
-    <div class="form-actions">
+    <div class="form-footer">
+      <span id="add-error"></span>
       <button class="btn btn-primary" onclick="addProcesso()">Adicionar Processo</button>
     </div>
   </div>
 
-  <div class="list-section">
+  <!-- List -->
+  <div class="card">
     <div class="list-header">
-      <div style="display:flex;align-items:center;gap:12px;">
+      <div style="display:flex;align-items:center;gap:10px">
         <h2>Processos monitorados</h2>
-        <span class="count-badge" id="count-badge">0</span>
+        <span class="badge" id="count-badge">...</span>
       </div>
-      <input type="text" id="search-input" placeholder="Buscar por numero, vara ou cliente..." oninput="renderList()">
+      <input type="text" id="search-input" placeholder="Buscar por vara, cliente ou numero..." oninput="render()">
     </div>
-    <div id="list-container">
-      <div class="empty-state">Carregando...</div>
-    </div>
+    <div id="list"></div>
   </div>
 
 </div>
 
 <script>
-const REPO = 'brunovot/tjpe-monitor';
+// ── Configuracao ────────────────────────────────────────────────────────────
+const REPO = 'brunovot/boletim-liminares';
 const FILE = 'processos.json';
 const API  = 'https://api.github.com';
 
 let processos = [];
-let fileSha   = '';
-let pendingRemoveIndex = null;
+let fileSha = '';
+let pendingIdx = null;
 
-// ── Token ─────────────────────────────────────────────────────────────────
-function getToken() { return localStorage.getItem('gh_token') || ''; }
+// ── Token ───────────────────────────────────────────────────────────────────
+const getToken = () => localStorage.getItem('gh_token') || '';
 
 function saveToken() {
   const v = document.getElementById('gh-token').value.trim();
-  if (!v) { showToast('Digite um token.', 'error'); return; }
+  if (!v) { toast('Digite um token.', 'err'); return; }
   localStorage.setItem('gh_token', v);
   document.getElementById('gh-token').value = '';
-  updateTokenStatus();
-  showToast('Chave salva.', 'success');
+  updTokenUI();
+  toast('Chave salva!', 'ok');
   loadData();
 }
-
 function clearToken() {
   localStorage.removeItem('gh_token');
-  updateTokenStatus();
-  showToast('Chave removida.');
+  updTokenUI();
+  toast('Chave removida.');
 }
-
-function updateTokenStatus() {
+function updTokenUI() {
   const t = getToken();
   const el = document.getElementById('token-status');
   if (t) {
-    el.textContent = 'Chave configurada (' + t.slice(0,10) + '...)';
-    el.className = 'token-status ok';
+    el.textContent = 'Chave configurada (' + t.slice(0,10) + '...) — edicao habilitada.';
+    el.className = 'ok';
   } else {
-    el.textContent = 'Nenhuma chave configurada. Apenas leitura.';
-    el.className = 'token-status err';
+    el.textContent = 'Nenhuma chave configurada. Os processos sao exibidos somente para leitura.';
+    el.className = 'err';
   }
 }
 
-// ── GitHub API ─────────────────────────────────────────────────────────────
+// ── GitHub API ──────────────────────────────────────────────────────────────
 async function ghGet(path) {
-  const headers = { 'Accept': 'application/vnd.github+json' };
-  if (getToken()) headers['Authorization'] = 'Bearer ' + getToken();
-  const r = await fetch(API + path, { headers });
+  const h = { 'Accept': 'application/vnd.github+json' };
+  if (getToken()) h['Authorization'] = 'Bearer ' + getToken();
+  const r = await fetch(API + path, { headers: h });
   if (!r.ok) throw new Error('HTTP ' + r.status);
   return r.json();
 }
-
 async function ghPut(path, body) {
-  const headers = {
-    'Accept': 'application/vnd.github+json',
-    'Authorization': 'Bearer ' + getToken(),
-    'Content-Type': 'application/json'
-  };
-  const r = await fetch(API + path, { method: 'PUT', headers, body: JSON.stringify(body) });
+  const r = await fetch(API + path, {
+    method: 'PUT',
+    headers: {
+      'Accept': 'application/vnd.github+json',
+      'Authorization': 'Bearer ' + getToken(),
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(body)
+  });
   if (!r.ok) {
-    const err = await r.json().catch(() => ({}));
-    throw new Error((err.message || 'Erro') + ' (HTTP ' + r.status + ')');
+    const e = await r.json().catch(() => ({}));
+    throw new Error((e.message || 'Erro') + ' (HTTP ' + r.status + ')');
   }
   return r.json();
 }
 
+// ── Load ────────────────────────────────────────────────────────────────────
 async function loadData() {
+  document.getElementById('list').innerHTML = '<div class="empty">Carregando...</div>';
   try {
     const data = await ghGet('/repos/' + REPO + '/contents/' + FILE);
     fileSha = data.sha;
     const json = JSON.parse(atob(data.content.replace(/
 /g, '')));
-    // Migra registros antigos que so tem "nome" para novo formato vara+cliente
     processos = (json.processos || []).map(p => {
-      if (p.vara !== undefined || p.cliente !== undefined) return p;
-      // Tenta extrair vara do padrao "(3A) NOME" ou deixa vazio
+      if (p.vara !== undefined) return p;
       const m = (p.nome || '').match(/^(([^)]+))s*(.+)$/);
-      if (m) return { numero: p.numero, vara: m[1], cliente: m[2] };
-      return { numero: p.numero, vara: '', cliente: p.nome || '' };
+      return m
+        ? { numero: p.numero, vara: m[1], cliente: m[2], nome: p.nome }
+        : { numero: p.numero, vara: '', cliente: p.nome || '', nome: p.nome };
     });
-    renderList();
+    render();
   } catch(e) {
-    document.getElementById('list-container').innerHTML =
-      '<div class="empty-state">Erro ao carregar: ' + e.message + '</div>';
+    document.getElementById('list').innerHTML = '<div class="empty">Erro ao carregar lista: ' + esc(e.message) + '</div>';
   }
 }
 
+// ── Save ────────────────────────────────────────────────────────────────────
 async function saveData() {
-  if (!getToken()) { showToast('Configure uma chave GitHub para salvar.', 'error'); return false; }
-  setLoading(true);
+  if (!getToken()) { toast('Configure uma chave GitHub para salvar.', 'err'); return false; }
+  setOverlay(true);
   try {
-    // Salva mantendo compatibilidade: gera campo "nome" para o monitor.py
     const payload = processos.map(p => ({
       numero: p.numero,
-      vara: p.vara,
-      cliente: p.cliente,
+      vara: p.vara || '',
+      cliente: p.cliente || '',
       nome: p.vara ? '(' + p.vara + ') ' + p.cliente : p.cliente
     }));
     const content = btoa(unescape(encodeURIComponent(
       JSON.stringify({ processos: payload }, null, 2)
     )));
-    const result = await ghPut('/repos/' + REPO + '/contents/' + FILE, {
-      message: 'Boletim: atualiza processos.json via interface web',
+    const res = await ghPut('/repos/' + REPO + '/contents/' + FILE, {
+      message: 'Boletim: atualiza processos.json',
       content,
       sha: fileSha
     });
-    fileSha = result.content.sha;
+    fileSha = res.content.sha;
     return true;
   } catch(e) {
-    showToast('Erro ao salvar: ' + e.message, 'error');
+    toast('Erro ao salvar: ' + e.message, 'err');
     return false;
   } finally {
-    setLoading(false);
+    setOverlay(false);
   }
 }
 
-// ── Formatacao ─────────────────────────────────────────────────────────────
-function formatNumero(input) {
-  let v = input.value.replace(/D/g, '');
+// ── Formatacao numero ───────────────────────────────────────────────────────
+function fmtNumero(inp) {
+  let v = inp.value.replace(/D/g, '');
   if (v.length > 7)  v = v.slice(0,7) + '-' + v.slice(7);
   if (v.length > 10) v = v.slice(0,10) + '.' + v.slice(10);
   if (v.length > 15) v = v.slice(0,15) + '.' + v.slice(15);
   if (v.length > 17) v = v.slice(0,17) + '.' + v.slice(17);
   if (v.length > 20) v = v.slice(0,20) + '.' + v.slice(20);
   if (v.length > 25) v = v.slice(0,25);
-  input.value = v;
+  inp.value = v;
 }
+const validNum = n => /^d{7}-d{2}.d{4}.d.d{2}.d{4}$/.test(n);
 
-function validarNumero(n) {
-  return /^d{7}-d{2}.d{4}.d.d{2}.d{4}$/.test(n);
-}
-
-// ── Adicionar ──────────────────────────────────────────────────────────────
+// ── Adicionar ───────────────────────────────────────────────────────────────
 async function addProcesso() {
   const numero  = document.getElementById('inp-numero').value.trim();
   const vara    = document.getElementById('inp-vara').value.trim().toUpperCase();
   const cliente = document.getElementById('inp-cliente').value.trim().toUpperCase();
   const errEl   = document.getElementById('add-error');
   errEl.textContent = '';
-
-  if (!numero) { errEl.textContent = 'Informe o numero do processo.'; return; }
-  if (!validarNumero(numero)) {
-    errEl.textContent = 'Formato invalido. Use: 0000000-00.0000.0.00.0000';
-    return;
-  }
-  if (!vara) { errEl.textContent = 'Informe a Vara.'; return; }
-  if (!cliente) { errEl.textContent = 'Informe o nome do cliente.'; return; }
-  if (processos.some(p => p.numero === numero)) {
-    errEl.textContent = 'Esse processo ja esta na lista.';
-    return;
-  }
-
+  if (!numero)         { errEl.textContent = 'Informe o numero do processo.'; return; }
+  if (!validNum(numero)) { errEl.textContent = 'Formato invalido: 0000000-00.0000.0.00.0000'; return; }
+  if (!vara)           { errEl.textContent = 'Informe a Vara.'; return; }
+  if (!cliente)        { errEl.textContent = 'Informe o nome do cliente.'; return; }
+  if (processos.some(p => p.numero === numero)) { errEl.textContent = 'Processo ja cadastrado.'; return; }
   processos.push({ numero, vara, cliente });
   const ok = await saveData();
   if (ok) {
     document.getElementById('inp-numero').value = '';
     document.getElementById('inp-vara').value   = '';
     document.getElementById('inp-cliente').value = '';
-    renderList();
-    showToast('Processo adicionado!', 'success');
+    render();
+    toast('Processo adicionado!', 'ok');
   } else {
     processos.pop();
   }
 }
 
-// ── Remover ────────────────────────────────────────────────────────────────
+// ── Remover ─────────────────────────────────────────────────────────────────
 function askRemove(idx) {
+  pendingIdx = idx;
   const p = processos[idx];
-  pendingRemoveIndex = idx;
-  document.getElementById('confirm-text').innerHTML =
-    '<strong>Vara ' + esc(p.vara) + ' &mdash; ' + esc(p.cliente) + '</strong><br>' +
-    '<span style="font-family:monospace;font-size:0.85rem;color:#888;">' + esc(p.numero) + '</span>';
-  document.getElementById('confirm-modal').classList.add('show');
+  document.getElementById('modal-text').innerHTML =
+    '<strong>Vara ' + esc(p.vara||'') + ' &mdash; ' + esc(p.cliente||p.nome||'') + '</strong><br>' +
+    '<span style="font-family:monospace;font-size:.82rem;color:#999">' + esc(p.numero) + '</span>';
+  document.getElementById('modal').classList.add('show');
 }
-
-function closeConfirm() {
-  pendingRemoveIndex = null;
-  document.getElementById('confirm-modal').classList.remove('show');
+function closeModal() {
+  pendingIdx = null;
+  document.getElementById('modal').classList.remove('show');
 }
-
 async function confirmRemove() {
-  const idx = pendingRemoveIndex;
-  closeConfirm();
+  const idx = pendingIdx;
+  closeModal();
   if (idx === null) return;
   const removed = processos.splice(idx, 1)[0];
   const ok = await saveData();
   if (ok) {
-    renderList();
-    showToast('Removido: ' + removed.cliente, 'success');
+    render();
+    toast('Removido: ' + (removed.cliente || removed.nome), 'ok');
   } else {
     processos.splice(idx, 0, removed);
   }
 }
 
-// ── Renderizar ─────────────────────────────────────────────────────────────
-function renderList() {
+// ── Render ──────────────────────────────────────────────────────────────────
+function render() {
   const q = (document.getElementById('search-input').value || '').toLowerCase();
   const filtered = processos
-    .map((p, i) => ({ ...p, idx: i }))
+    .map((p, i) => ({...p, idx: i}))
     .filter(p => !q ||
       p.numero.toLowerCase().includes(q) ||
-      (p.vara || '').toLowerCase().includes(q) ||
-      (p.cliente || '').toLowerCase().includes(q)
+      (p.vara||'').toLowerCase().includes(q) ||
+      (p.cliente||p.nome||'').toLowerCase().includes(q)
     );
 
   const n = processos.length;
-  document.getElementById('count-badge').textContent = n + ' processo' + (n !== 1 ? 's' : '');
-  document.getElementById('header-count').textContent = n + ' processo' + (n !== 1 ? 's' : '') + ' monitorado' + (n !== 1 ? 's' : '');
+  document.getElementById('count-badge').textContent = n;
+  document.getElementById('hdr-count').textContent = n + ' processo' + (n!==1?'s':'') + ' monitorado' + (n!==1?'s':'');
 
   if (!filtered.length) {
-    document.getElementById('list-container').innerHTML =
-      '<div class="empty-state">' + (q ? 'Nenhum resultado para "' + q + '".' : 'Nenhum processo cadastrado.') + '</div>';
+    document.getElementById('list').innerHTML =
+      '<div class="empty">' + (q ? 'Nenhum resultado para "' + esc(q) + '".' : 'Nenhum processo cadastrado.') + '</div>';
     return;
   }
 
-  let html = '<table><thead><tr>' +
-    '<th>#</th>' +
-    '<th>Vara</th>' +
-    '<th>Cliente</th>' +
-    '<th>Numero do Processo</th>' +
-    '<th></th>' +
-    '</tr></thead><tbody>';
-
+  const hasToken = !!getToken();
+  let h = '<table><thead><tr><th>#</th><th>Vara</th><th>Cliente</th><th>Numero do Processo</th><th></th></tr></thead><tbody>';
   filtered.forEach((p, i) => {
-    html += '<tr>' +
-      '<td style="color:#aaa;font-size:0.8rem;width:28px;">' + (i+1) + '</td>' +
-      '<td class="vara"><span class="vara-badge">' + esc(p.vara || '-') + '</span></td>' +
-      '<td class="cliente">' + esc(p.cliente || p.nome || '') + '</td>' +
-      '<td class="num">' + esc(p.numero) + '</td>' +
-      '<td class="actions"><button class="btn btn-danger" onclick="askRemove(' + p.idx + ')">Remover</button></td>' +
+    const nome = esc(p.cliente || p.nome || '');
+    const vara = esc(p.vara || '-');
+    const num  = esc(p.numero);
+    const btn  = hasToken
+      ? '<button class="btn btn-danger" onclick="askRemove(' + p.idx + ')">Remover</button>'
+      : '<span style="font-size:.75rem;color:#bbb">Somente leitura</span>';
+    h += '<tr>' +
+      '<td class="n">' + (i+1) + '</td>' +
+      '<td class="vara"><span class="vara-chip">' + vara + '</span></td>' +
+      '<td class="cliente">' + nome + '</td>' +
+      '<td class="num">' + num + '</td>' +
+      '<td class="act">' + btn + '</td>' +
       '</tr>';
   });
-
-  html += '</tbody></table>';
-  document.getElementById('list-container').innerHTML = html;
+  h += '</tbody></table>';
+  document.getElementById('list').innerHTML = h;
 }
 
-function esc(s) {
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
+// ── Helpers ──────────────────────────────────────────────────────────────────
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') }
 
-// ── Helpers ────────────────────────────────────────────────────────────────
-let toastTimer;
-function showToast(msg, type) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className = 'show' + (type ? ' ' + type : '');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => { t.className = ''; }, 3200);
+let toastT;
+function toast(msg, type) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = 'show' + (type ? ' '+type : '');
+  clearTimeout(toastT);
+  toastT = setTimeout(() => el.className = '', 3000);
 }
+function setOverlay(v){ document.getElementById('overlay').classList.toggle('show', v) }
 
-function setLoading(v) {
-  document.getElementById('loading').classList.toggle('show', v);
-}
-
-// ── Init ───────────────────────────────────────────────────────────────────
-updateTokenStatus();
+// ── Init ─────────────────────────────────────────────────────────────────────
+updTokenUI();
 loadData();
 
-document.getElementById('confirm-modal').addEventListener('click', function(e) {
-  if (e.target === this) closeConfirm();
-});
-
-// Enter no ultimo campo adiciona
-document.getElementById('inp-cliente').addEventListener('keydown', e => {
-  if (e.key === 'Enter') addProcesso();
-});
+document.getElementById('modal').addEventListener('click', e => { if(e.target===e.currentTarget) closeModal(); });
+document.getElementById('inp-cliente').addEventListener('keydown', e => { if(e.key==='Enter') addProcesso(); });
 </script>
 </body>
 </html>
