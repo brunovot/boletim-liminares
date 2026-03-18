@@ -1,0 +1,30 @@
+{
+  "processos": [
+    { "numero": "0098377-95.2025.8.17.2001", "vara": "3A",  "cliente": "CARLOS EDUARDO CALADO",  "nome": "(3A) CARLOS EDUARDO CALADO" },
+    { "numero": "0077649-33.2025.8.17.2001", "vara": "3B",  "cliente": "ANTONELLA",               "nome": "(3B) ANTONELLA" },
+    { "numero": "0072235-54.2025.8.17.2001", "vara": "4A",  "cliente": "SILVIO MENDES",           "nome": "(4A) SILVIO MENDES" },
+    { "numero": "0002541-61.2026.8.17.2001", "vara": "5A",  "cliente": "JK",                      "nome": "(5A) JK" },
+    { "numero": "0004008-12.2025.8.17.2001", "vara": "5B",  "cliente": "GLOBAL",                  "nome": "(5B) GLOBAL" },
+    { "numero": "0008539-10.2026.8.17.2001", "vara": "6A",  "cliente": "EULALIA",                 "nome": "(6A) EULALIA" },
+    { "numero": "0005618-78.2026.8.17.2001", "vara": "9A",  "cliente": "ELIANA",                  "nome": "(9A) ELIANA" },
+    { "numero": "0005627-40.2026.8.17.2001", "vara": "9B",  "cliente": "ALBA",                    "nome": "(9B) ALBA" },
+    { "numero": "0008626-63.2026.8.17.2001", "vara": "11A", "cliente": "NILSON",                  "nome": "(11A) NILSON" },
+    { "numero": "0002732-09.2026.8.17.2001", "vara": "11A", "cliente": "FERNANDA BREVES",         "nome": "(11A) FERNANDA BREVES" },
+    { "numero": "0005607-49.2026.8.17.2001", "vara": "13A", "cliente": "FERNANDO PINTO",          "nome": "(13A) FERNANDO PINTO" },
+    { "numero": "0073713-97.2025.8.17.2001", "vara": "17A", "cliente": "DEGUSTAR",                "nome": "(17A) DEGUSTAR" },
+    { "numero": "0002498-27.2026.8.17.2001", "vara": "18B", "cliente": "DIENGE",                  "nome": "(18B) DIENGE" },
+    { "numero": "0109428-06.2025.8.17.2001", "vara": "18B", "cliente": "JEANE BORBA",             "nome": "(18B) JEANE BORBA" },
+    { "numero": "0109782-31.2025.8.17.2001", "vara": "19A", "cliente": "ANA MARGARETH",           "nome": "(19A) ANA MARGARETH" },
+    { "numero": "0109753-78.2025.8.17.2001", "vara": "23B", "cliente": "JORGE WELLINGTON",        "nome": "(23B) JORGE WELLINGTON" },
+    { "numero": "0098402-11.2025.8.17.2001", "vara": "23B", "cliente": "ANDRE MERONI",            "nome": "(23B) ANDRE MERONI" },
+    { "numero": "0062206-42.2025.8.17.2001", "vara": "27B", "cliente": "RENATA",                  "nome": "(27B) RENATA" },
+    { "numero": "0010653-19.2026.8.17.2001", "vara": "27B", "cliente": "JOHANNES",                "nome": "(27B) JOHANNES" },
+    { "numero": "0008597-13.2026.8.17.2001", "vara": "31A", "cliente": "MARCOS A LIMA",           "nome": "(31A) MARCOS A LIMA" },
+    { "numero": "0109967-69.2025.8.17.2001", "vara": "31B", "cliente": "RICARDO MONTEIRO",        "nome": "(31B) RICARDO MONTEIRO" },
+    { "numero": "0072263-22.2025.8.17.2001", "vara": "33B", "cliente": "MARIA HELENA",            "nome": "(33B) MARIA HELENA" },
+    { "numero": "0107200-58.2025.8.17.2001", "vara": "34A", "cliente": "SONIA",                   "nome": "(34A) SONIA" },
+    { "numero": "0016730-44.2026.8.17.2001", "vara": "34A", "cliente": "MANOEL",                  "nome": "(34A) MANOEL" },
+    { "numero": "0001056-24.2026.8.17.2810", "vara": "1 VC JABOTAO", "cliente": "ILZA",           "nome": "(1 VC JABOTAO) ILZA" },
+    { "numero": "0762847-89.2025.8.02.0001", "vara": "ALAGOAS", "cliente": "MARCELO",             "nome": "(ALAGOAS) MARCELO" }
+  ]
+}
