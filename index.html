@@ -161,10 +161,10 @@
               <h1>&#9878; Boletim de Liminares</h1>
         </div>
       <div class="header-right">
-          <span id="hdr-count">carregando...</span>span>
+          <span id="hdr-count">carregando...</span>
           <button class="btn-config" onclick="toggleTokenSection()" title="Configurar chave GitHub">
                 &#9881; Chave GitHub
-          </button>button>
+          </button>
       </div>
     </header>
   
@@ -174,8 +174,8 @@
         <h2>Chave GitHub</h2>
         <div class="token-row">
               <input type="password" id="gh-token" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" autocomplete="off">
-              <button class="btn btn-primary" onclick="saveToken()">Salvar</button>button>
-              <button class="btn btn-secondary" onclick="clearToken()">Remover</button>button>
+              <button class="btn btn-primary" onclick="saveToken()">Salvar</button>
+              <button class="btn btn-secondary" onclick="clearToken()">Remover</button>
         </div>
         <div class="token-status" id="token-status"></div>
     </div>
@@ -198,7 +198,7 @@
               </div>
         </div>
         <div style="display:flex; justify-content:flex-end;">
-              <button class="btn btn-primary" onclick="addProcesso()">Adicionar Processo</button>button>
+              <button class="btn btn-primary" onclick="addProcesso()">Adicionar Processo</button>
         </div>
         <div class="error-msg" id="add-error"></div>
     </div>
@@ -208,7 +208,7 @@
         <div class="list-header">
               <div class="list-title">
                       Processos monitorados
-                      <span class="badge" id="count-badge">0</span>span>
+                      <span class="badge" id="count-badge">0</span>
               </div>
               <input type="text" class="search-input" id="search-input" placeholder="Buscar por vara, cliente ou num..." oninput="render()">
         </div>
@@ -225,8 +225,8 @@
         <h3>Remover processo?</h3>
         <p id="modal-text"></p>p>
         <div class="btns">
-              <button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>button>
-              <button class="btn btn-danger" onclick="confirmRemove()">Sim, remover</button>button>
+              <button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+              <button class="btn btn-danger" onclick="confirmRemove()">Sim, remover</button>
         </div>
     </div>
   </div>
@@ -238,8 +238,8 @@
         <p>Para adicionar ou remover processos, informe sua chave de acesso do GitHub. Ela sera salva no navegador e nao precisara ser inserida novamente.</p>
         <input type="password" id="setup-token-input" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" autocomplete="off">
         <div class="btns">
-              <button class="btn btn-secondary" onclick="closeSetupModal()">Usar somente leitura</button>button>
-              <button class="btn btn-primary" onclick="saveTokenFromSetup()">Salvar e continuar</button>button>
+              <button class="btn btn-secondary" onclick="closeSetupModal()">Usar somente leitura</button>
+              <button class="btn btn-primary" onclick="saveTokenFromSetup()">Salvar e continuar</button>
         </div>
         <p class="hint">Gere um token em: GitHub &rarr; Settings &rarr; Developer settings &rarr; Personal access tokens (permissao: repo)</p>
     </div>
