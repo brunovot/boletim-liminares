@@ -6,7 +6,7 @@ on:
   workflow_dispatch:  # Permite rodar manualmente
 
 jobs:
-  enviar-boletim:
+  enviar-boletim
     runs-on: ubuntu-latest
     
     steps:
@@ -45,12 +45,13 @@ jobs:
             TOTAL=$((TOTAL + 1))
             
             # Consulta à API do DataJud/CNJ
+            BODY=$(printf '{"query":{"match":{"numeroProcesso":"%s"}}}' "$NUMERO")
             RESPONSE=$(curl -s --max-time 30 \
               -X POST \
               "https://api-publica.datajud.cnj.jus.br/api_publica_tjpe/_search" \
               -H "Authorization: ApiKey cDZHYzlZa0JadVREZDJCendQbXY6SkJlTzNjLV9TRENyQk1RdnFKZFhSZw==" \
               -H "Content-Type: application/json" \
-              -d "{"query":{"match":{"numeroProcesso":"${NUMERO}"}}}" 2>/dev/null || echo "ERRO")
+              -d "$BODY" 2>/dev/null || echo "ERRO")
             
             if echo "$RESPONSE" | grep -q '"hits"'; then
               TOTAL_HITS=$(echo "$RESPONSE" | jq -r '.hits.total.value // 0' 2>/dev/null || echo "0")
