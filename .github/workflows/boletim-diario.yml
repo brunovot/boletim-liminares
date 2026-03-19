@@ -1,0 +1,99 @@
+name: Boletim Diário de Liminares
+
+on:
+  schedule:
+    - cron: '0 9 * * *'  # 09:00 UTC = 06:00 Brasília
+  workflow_dispatch:  # Permite rodar manualmente
+
+jobs:
+  enviar-boletim:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v4
+      
+      - name: Instalar dependências
+        run: |
+          sudo apt-get install -y jq curl
+      
+      - name: Buscar dados e enviar boletim
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          set -e
+          
+          DATA=$(date '+%d/%m/%Y')
+          HORA=$(TZ='America/Recife' date '+%H:%M')
+          
+          MENSAGEM="📋 *Boletim de Liminares*"
+          MENSAGEM="${MENSAGEM}\n📅 ${DATA} às ${HORA}"
+          MENSAGEM="${MENSAGEM}\n━━━━━━━━━━━━━━━━━━━━"
+          
+          PROCESSOS=$(cat processos.json | jq -r '.processos[] | .numero + "|" + .vara + "|" + .cliente')
+          
+          TOTAL=0
+          ENCONTRADOS=0
+          NAO_ENCONTRADOS=0
+          ERROS=0
+          
+          LISTA_OK=""
+          LISTA_ERRO=""
+          
+          while IFS='|' read -r NUMERO VARA CLIENTE; do
+            TOTAL=$((TOTAL + 1))
+            
+            # Consulta à API do DataJud/CNJ
+            RESPONSE=$(curl -s --max-time 30 \
+              -X POST \
+              "https://api-publica.datajud.cnj.jus.br/api_publica_tjpe/_search" \
+              -H "Authorization: ApiKey cDZHYzlZa0JadVREZDJCendQbXY6SkJlTzNjLV9TRENyQk1RdnFKZFhSZw==" \
+              -H "Content-Type: application/json" \
+              -d "{"query":{"match":{"numeroProcesso":"${NUMERO}"}}}" 2>/dev/null || echo "ERRO")
+            
+            if echo "$RESPONSE" | grep -q '"hits"'; then
+              TOTAL_HITS=$(echo "$RESPONSE" | jq -r '.hits.total.value // 0' 2>/dev/null || echo "0")
+              
+              if [ "$TOTAL_HITS" -gt "0" ]; then
+                ENCONTRADOS=$((ENCONTRADOS + 1))
+                ULTIMO=$(echo "$RESPONSE" | jq -r '.hits.hits[0]._source | 
+                  "\(.dataUltimaAtualizacao // "N/A" | .[0:10]) | \(.classeProcessual.nome // "N/A")"' 2>/dev/null || echo "dados indisponíveis")
+                LISTA_OK="${LISTA_OK}\n✅ ${VARA} | ${CLIENTE}\n   📝 ${ULTIMO}"
+              else
+                NAO_ENCONTRADOS=$((NAO_ENCONTRADOS + 1))
+                LISTA_OK="${LISTA_OK}\n⚪ ${VARA} | ${CLIENTE} (sem movimentos)"
+              fi
+            else
+              ERROS=$((ERROS + 1))
+              LISTA_ERRO="${LISTA_ERRO}\n⚠️ ${VARA} | ${CLIENTE}"
+            fi
+            
+            sleep 0.5
+          done <<< "$PROCESSOS"
+          
+          MENSAGEM="${MENSAGEM}\n\n📊 *Resumo:* ${TOTAL} processos"
+          MENSAGEM="${MENSAGEM}\n✅ Com dados: ${ENCONTRADOS}"
+          MENSAGEM="${MENSAGEM}\n⚪ Sem movimentos: ${NAO_ENCONTRADOS}"
+          
+          if [ -n "$LISTA_OK" ]; then
+            MENSAGEM="${MENSAGEM}\n\n*Processos:*${LISTA_OK}"
+          fi
+          
+          if [ -n "$LISTA_ERRO" ]; then
+            MENSAGEM="${MENSAGEM}\n\n*Erros de consulta:*${LISTA_ERRO}"
+          fi
+          
+          MENSAGEM="${MENSAGEM}\n\n🔗 https://brunovot.github.io/boletim-liminares/"
+          
+          # Envia para o Telegram
+          curl -s -X POST \
+            "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+            -H "Content-Type: application/json" \
+            -d "{
+              \"chat_id\": \"${TELEGRAM_CHAT_ID}\",
+              \"text\": \"${MENSAGEM}\",
+              \"parse_mode\": \"Markdown\"
+            }"
+          
+          echo "✅ Boletim enviado com sucesso!"
