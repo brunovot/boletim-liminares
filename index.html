@@ -12,8 +12,6 @@
     #hdr-count{font-size:.85rem;opacity:.8}
     .container{max-width:1020px;margin:28px auto;padding:0 20px}
     .card{background:#fff;border-radius:10px;padding:20px 24px;margin-bottom:22px;box-shadow:0 1px 4px rgba(0,0,0,.1)}
-
-    /* Token */
     #token-section{border-left:4px solid #2d6a9f}
     #token-section h3{font-size:.9rem;color:#1a3a5c;margin-bottom:10px}
     .token-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
@@ -21,8 +19,6 @@
     #token-status{font-size:.78rem;margin-top:6px;color:#888}
     #token-status.ok{color:#2e7d32}
     #token-status.err{color:#c62828}
-
-    /* Add form */
     .add-form h2{font-size:.95rem;color:#1a3a5c;margin-bottom:14px}
     .form-grid{display:grid;grid-template-columns:2.2fr .9fr 2.2fr;gap:12px;margin-bottom:12px}
     @media(max-width:680px){.form-grid{grid-template-columns:1fr}}
@@ -32,8 +28,6 @@
     #inp-numero{font-family:monospace}
     .form-footer{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
     #add-error{font-size:.8rem;color:#c62828}
-
-    /* Buttons */
     .btn{padding:9px 18px;border:none;border-radius:6px;font-size:.88rem;font-weight:600;cursor:pointer;transition:background .18s,transform .1s}
     .btn:active{transform:scale(.97)}
     .btn-primary{background:#2d6a9f;color:#fff}
@@ -43,14 +37,11 @@
     .btn-secondary:hover{background:#ddd}
     .btn-danger{background:#e53935;color:#fff;padding:5px 13px;font-size:.8rem}
     .btn-danger:hover{background:#b71c1c}
-
-    /* List */
     .list-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px}
     .list-header h2{font-size:.95rem;color:#1a3a5c}
     .badge{background:#e8f0fe;color:#1a3a5c;padding:2px 10px;border-radius:20px;font-size:.8rem;font-weight:700}
     #search-input{padding:7px 12px;border:1px solid #ccc;border-radius:6px;font-size:.85rem;width:260px}
     #search-input:focus{outline:none;border-color:#2d6a9f}
-
     table{width:100%;border-collapse:collapse;font-size:.87rem}
     thead th{text-align:left;padding:8px 10px;border-bottom:2px solid #e8e8e8;color:#555;font-size:.73rem;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap}
     tbody tr{border-bottom:1px solid #f2f2f2;transition:background .12s}
@@ -63,20 +54,14 @@
     td.num{font-family:monospace;font-size:.8rem;color:#666;white-space:nowrap}
     td.act{text-align:right;white-space:nowrap}
     .empty{text-align:center;padding:32px;color:#aaa;font-size:.9rem}
-
-    /* Toast */
     #toast{position:fixed;bottom:22px;right:22px;background:#323232;color:#fff;padding:11px 18px;border-radius:8px;font-size:.86rem;opacity:0;transform:translateY(8px);transition:opacity .28s,transform .28s;pointer-events:none;z-index:999;max-width:300px}
     #toast.show{opacity:1;transform:translateY(0)}
     #toast.ok{background:#2e7d32}
     #toast.err{background:#c62828}
-
-    /* Loading overlay */
     #overlay{display:none;position:fixed;inset:0;background:rgba(255,255,255,.65);z-index:900;align-items:center;justify-content:center;font-size:.95rem;color:#1a3a5c;font-weight:600}
     #overlay.show{display:flex}
     .spin{width:26px;height:26px;border:3px solid #cce0f5;border-top-color:#2d6a9f;border-radius:50%;animation:spin .75s linear infinite;margin-right:10px}
     @keyframes spin{to{transform:rotate(360deg)}}
-
-    /* Modal */
     #modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:950;align-items:center;justify-content:center}
     #modal.show{display:flex}
     .mbox{background:#fff;border-radius:10px;padding:26px 28px;max-width:400px;width:92%;box-shadow:0 8px 32px rgba(0,0,0,.2)}
@@ -86,15 +71,12 @@
   </style>
 </head>
 <body>
-
 <header>
   <h1>&#9878; Boletim de Liminares</h1>
   <span id="hdr-count"></span>
 </header>
-
 <div id="overlay"><div class="spin"></div>Salvando...</div>
 <div id="toast"></div>
-
 <div id="modal">
   <div class="mbox">
     <h3>Remover processo?</h3>
@@ -105,10 +87,7 @@
     </div>
   </div>
 </div>
-
 <div class="container">
-
-  <!-- Token -->
   <div class="card" id="token-section">
     <h3>Chave GitHub (necessaria para adicionar ou remover processos)</h3>
     <div class="token-row">
@@ -118,8 +97,6 @@
     </div>
     <div id="token-status" class="err">Nenhuma chave configurada. Os processos sao exibidos somente para leitura.</div>
   </div>
-
-  <!-- Add form -->
   <div class="card add-form">
     <h2>Adicionar Processo</h2>
     <div class="form-grid">
@@ -141,8 +118,6 @@
       <button class="btn btn-primary" onclick="addProcesso()">Adicionar Processo</button>
     </div>
   </div>
-
-  <!-- List -->
   <div class="card">
     <div class="list-header">
       <div style="display:flex;align-items:center;gap:10px">
@@ -153,249 +128,165 @@
     </div>
     <div id="list"></div>
   </div>
-
 </div>
-
 <script>
-// ── Configuracao ────────────────────────────────────────────────────────────
-const REPO = 'brunovot/boletim-liminares';
-const FILE = 'processos.json';
-const API  = 'https://api.github.com';
+const REPO='brunovot/boletim-liminares';
+const FILE='processos.json';
+const API='https://api.github.com';
+let processos=[],fileSha='',pendingIdx=null;
 
-let processos = [];
-let fileSha = '';
-let pendingIdx = null;
+const getToken=()=>localStorage.getItem('gh_token')||'';
 
-// ── Token ───────────────────────────────────────────────────────────────────
-const getToken = () => localStorage.getItem('gh_token') || '';
-
-function saveToken() {
-  const v = document.getElementById('gh-token').value.trim();
-  if (!v) { toast('Digite um token.', 'err'); return; }
-  localStorage.setItem('gh_token', v);
-  document.getElementById('gh-token').value = '';
-  updTokenUI();
-  toast('Chave salva!', 'ok');
-  loadData();
+function saveToken(){
+  const v=document.getElementById('gh-token').value.trim();
+  if(!v){toast('Digite um token.','err');return;}
+  localStorage.setItem('gh_token',v);
+  document.getElementById('gh-token').value='';
+  updToken();toast('Chave salva!','ok');loadData();
 }
-function clearToken() {
-  localStorage.removeItem('gh_token');
-  updTokenUI();
-  toast('Chave removida.');
-}
-function updTokenUI() {
-  const t = getToken();
-  const el = document.getElementById('token-status');
-  if (t) {
-    el.textContent = 'Chave configurada (' + t.slice(0,10) + '...) — edicao habilitada.';
-    el.className = 'ok';
-  } else {
-    el.textContent = 'Nenhuma chave configurada. Os processos sao exibidos somente para leitura.';
-    el.className = 'err';
-  }
+function clearToken(){localStorage.removeItem('gh_token');updToken();toast('Chave removida.');}
+function updToken(){
+  const t=getToken(),el=document.getElementById('token-status');
+  if(t){el.textContent='Chave configurada ('+t.slice(0,10)+'...) — edicao habilitada.';el.className='ok';}
+  else{el.textContent='Nenhuma chave configurada. Os processos sao exibidos somente para leitura.';el.className='err';}
 }
 
-// ── GitHub API ──────────────────────────────────────────────────────────────
-async function ghGet(path) {
-  const h = { 'Accept': 'application/vnd.github+json' };
-  if (getToken()) h['Authorization'] = 'Bearer ' + getToken();
-  const r = await fetch(API + path, { headers: h });
-  if (!r.ok) throw new Error('HTTP ' + r.status);
+async function ghGet(path){
+  const h={'Accept':'application/vnd.github+json'};
+  if(getToken())h['Authorization']='Bearer '+getToken();
+  const r=await fetch(API+path,{headers:h});
+  if(!r.ok)throw new Error('HTTP '+r.status);
   return r.json();
 }
-async function ghPut(path, body) {
-  const r = await fetch(API + path, {
-    method: 'PUT',
-    headers: {
-      'Accept': 'application/vnd.github+json',
-      'Authorization': 'Bearer ' + getToken(),
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(body)
-  });
-  if (!r.ok) {
-    const e = await r.json().catch(() => ({}));
-    throw new Error((e.message || 'Erro') + ' (HTTP ' + r.status + ')');
-  }
+async function ghPut(path,body){
+  const r=await fetch(API+path,{method:'PUT',
+    headers:{'Accept':'application/vnd.github+json','Authorization':'Bearer '+getToken(),'Content-Type':'application/json'},
+    body:JSON.stringify(body)});
+  if(!r.ok){const e=await r.json().catch(()=>({}));throw new Error((e.message||'Erro')+' (HTTP '+r.status+')');}
   return r.json();
 }
 
-// ── Load ────────────────────────────────────────────────────────────────────
-async function loadData() {
-  document.getElementById('list').innerHTML = '<div class="empty">Carregando...</div>';
-  try {
-    const data = await ghGet('/repos/' + REPO + '/contents/' + FILE);
-    fileSha = data.sha;
-    const json = JSON.parse(atob(data.content.replace(/
-/g, '')));
-    processos = (json.processos || []).map(p => {
-      if (p.vara !== undefined) return p;
-      const m = (p.nome || '').match(/^(([^)]+))s*(.+)$/);
-      return m
-        ? { numero: p.numero, vara: m[1], cliente: m[2], nome: p.nome }
-        : { numero: p.numero, vara: '', cliente: p.nome || '', nome: p.nome };
+async function loadData(){
+  document.getElementById('list').innerHTML='<div class="empty">Carregando...</div>';
+  try{
+    const data=await ghGet('/repos/'+REPO+'/contents/'+FILE);
+    fileSha=data.sha;
+    const json=JSON.parse(atob(data.content.replace(/\n/g,'')));
+    processos=(json.processos||[]).map(p=>{
+      if(p.vara!==undefined)return p;
+      const m=(p.nome||'').match(/^\(([^)]+)\)\s*(.+)$/);
+      return m?{numero:p.numero,vara:m[1],cliente:m[2],nome:p.nome}:{numero:p.numero,vara:'',cliente:p.nome||'',nome:p.nome};
     });
     render();
-  } catch(e) {
-    document.getElementById('list').innerHTML = '<div class="empty">Erro ao carregar lista: ' + esc(e.message) + '</div>';
+  }catch(e){
+    document.getElementById('list').innerHTML='<div class="empty">Erro ao carregar: '+esc(e.message)+'</div>';
   }
 }
 
-// ── Save ────────────────────────────────────────────────────────────────────
-async function saveData() {
-  if (!getToken()) { toast('Configure uma chave GitHub para salvar.', 'err'); return false; }
-  setOverlay(true);
-  try {
-    const payload = processos.map(p => ({
-      numero: p.numero,
-      vara: p.vara || '',
-      cliente: p.cliente || '',
-      nome: p.vara ? '(' + p.vara + ') ' + p.cliente : p.cliente
+async function saveData(){
+  if(!getToken()){toast('Configure uma chave GitHub para salvar.','err');return false;}
+  setOv(true);
+  try{
+    const payload=processos.map(p=>({
+      numero:p.numero,vara:p.vara||'',cliente:p.cliente||'',
+      nome:p.vara?'('+p.vara+') '+p.cliente:p.cliente
     }));
-    const content = btoa(unescape(encodeURIComponent(
-      JSON.stringify({ processos: payload }, null, 2)
-    )));
-    const res = await ghPut('/repos/' + REPO + '/contents/' + FILE, {
-      message: 'Boletim: atualiza processos.json',
-      content,
-      sha: fileSha
-    });
-    fileSha = res.content.sha;
-    return true;
-  } catch(e) {
-    toast('Erro ao salvar: ' + e.message, 'err');
-    return false;
-  } finally {
-    setOverlay(false);
-  }
+    const content=btoa(unescape(encodeURIComponent(JSON.stringify({processos:payload},null,2))));
+    const res=await ghPut('/repos/'+REPO+'/contents/'+FILE,{
+      message:'Boletim: atualiza processos.json',content,sha:fileSha});
+    fileSha=res.content.sha;return true;
+  }catch(e){toast('Erro ao salvar: '+e.message,'err');return false;}
+  finally{setOv(false);}
 }
 
-// ── Formatacao numero ───────────────────────────────────────────────────────
-function fmtNumero(inp) {
-  let v = inp.value.replace(/D/g, '');
-  if (v.length > 7)  v = v.slice(0,7) + '-' + v.slice(7);
-  if (v.length > 10) v = v.slice(0,10) + '.' + v.slice(10);
-  if (v.length > 15) v = v.slice(0,15) + '.' + v.slice(15);
-  if (v.length > 17) v = v.slice(0,17) + '.' + v.slice(17);
-  if (v.length > 20) v = v.slice(0,20) + '.' + v.slice(20);
-  if (v.length > 25) v = v.slice(0,25);
-  inp.value = v;
+function fmtNumero(inp){
+  let v=inp.value.replace(/[^0-9]/g,'');
+  if(v.length>7) v=v.slice(0,7)+'-'+v.slice(7);
+  if(v.length>10)v=v.slice(0,10)+'.'+v.slice(10);
+  if(v.length>15)v=v.slice(0,15)+'.'+v.slice(15);
+  if(v.length>17)v=v.slice(0,17)+'.'+v.slice(17);
+  if(v.length>20)v=v.slice(0,20)+'.'+v.slice(20);
+  if(v.length>25)v=v.slice(0,25);
+  inp.value=v;
 }
-const validNum = n => /^d{7}-d{2}.d{4}.d.d{2}.d{4}$/.test(n);
+const validNum=n=>/^[0-9]{7}-[0-9]{2}[.][0-9]{4}[.][0-9][.][0-9]{2}[.][0-9]{4}$/.test(n);
 
-// ── Adicionar ───────────────────────────────────────────────────────────────
-async function addProcesso() {
-  const numero  = document.getElementById('inp-numero').value.trim();
-  const vara    = document.getElementById('inp-vara').value.trim().toUpperCase();
-  const cliente = document.getElementById('inp-cliente').value.trim().toUpperCase();
-  const errEl   = document.getElementById('add-error');
-  errEl.textContent = '';
-  if (!numero)         { errEl.textContent = 'Informe o numero do processo.'; return; }
-  if (!validNum(numero)) { errEl.textContent = 'Formato invalido: 0000000-00.0000.0.00.0000'; return; }
-  if (!vara)           { errEl.textContent = 'Informe a Vara.'; return; }
-  if (!cliente)        { errEl.textContent = 'Informe o nome do cliente.'; return; }
-  if (processos.some(p => p.numero === numero)) { errEl.textContent = 'Processo ja cadastrado.'; return; }
-  processos.push({ numero, vara, cliente });
-  const ok = await saveData();
-  if (ok) {
-    document.getElementById('inp-numero').value = '';
-    document.getElementById('inp-vara').value   = '';
-    document.getElementById('inp-cliente').value = '';
-    render();
-    toast('Processo adicionado!', 'ok');
-  } else {
-    processos.pop();
-  }
+async function addProcesso(){
+  const numero=document.getElementById('inp-numero').value.trim();
+  const vara=document.getElementById('inp-vara').value.trim().toUpperCase();
+  const cliente=document.getElementById('inp-cliente').value.trim().toUpperCase();
+  const errEl=document.getElementById('add-error');errEl.textContent='';
+  if(!numero){errEl.textContent='Informe o numero do processo.';return;}
+  if(!validNum(numero)){errEl.textContent='Formato invalido: 0000000-00.0000.0.00.0000';return;}
+  if(!vara){errEl.textContent='Informe a Vara.';return;}
+  if(!cliente){errEl.textContent='Informe o nome do cliente.';return;}
+  if(processos.some(p=>p.numero===numero)){errEl.textContent='Processo ja cadastrado.';return;}
+  processos.push({numero,vara,cliente});
+  const ok=await saveData();
+  if(ok){
+    document.getElementById('inp-numero').value='';
+    document.getElementById('inp-vara').value='';
+    document.getElementById('inp-cliente').value='';
+    render();toast('Processo adicionado!','ok');
+  }else{processos.pop();}
 }
 
-// ── Remover ─────────────────────────────────────────────────────────────────
-function askRemove(idx) {
-  pendingIdx = idx;
-  const p = processos[idx];
-  document.getElementById('modal-text').innerHTML =
-    '<strong>Vara ' + esc(p.vara||'') + ' &mdash; ' + esc(p.cliente||p.nome||'') + '</strong><br>' +
-    '<span style="font-family:monospace;font-size:.82rem;color:#999">' + esc(p.numero) + '</span>';
+function askRemove(idx){
+  pendingIdx=idx;const p=processos[idx];
+  document.getElementById('modal-text').innerHTML=
+    '<strong>Vara '+esc(p.vara||'')+' &mdash; '+esc(p.cliente||p.nome||'')+'</strong><br>'+
+    '<span style="font-family:monospace;font-size:.82rem;color:#999">'+esc(p.numero)+'</span>';
   document.getElementById('modal').classList.add('show');
 }
-function closeModal() {
-  pendingIdx = null;
-  document.getElementById('modal').classList.remove('show');
-}
-async function confirmRemove() {
-  const idx = pendingIdx;
-  closeModal();
-  if (idx === null) return;
-  const removed = processos.splice(idx, 1)[0];
-  const ok = await saveData();
-  if (ok) {
-    render();
-    toast('Removido: ' + (removed.cliente || removed.nome), 'ok');
-  } else {
-    processos.splice(idx, 0, removed);
-  }
+function closeModal(){pendingIdx=null;document.getElementById('modal').classList.remove('show');}
+async function confirmRemove(){
+  const idx=pendingIdx;closeModal();if(idx===null)return;
+  const removed=processos.splice(idx,1)[0];
+  const ok=await saveData();
+  if(ok){render();toast('Removido: '+(removed.cliente||removed.nome),'ok');}
+  else{processos.splice(idx,0,removed);}
 }
 
-// ── Render ──────────────────────────────────────────────────────────────────
-function render() {
-  const q = (document.getElementById('search-input').value || '').toLowerCase();
-  const filtered = processos
-    .map((p, i) => ({...p, idx: i}))
-    .filter(p => !q ||
-      p.numero.toLowerCase().includes(q) ||
-      (p.vara||'').toLowerCase().includes(q) ||
-      (p.cliente||p.nome||'').toLowerCase().includes(q)
-    );
-
-  const n = processos.length;
-  document.getElementById('count-badge').textContent = n;
-  document.getElementById('hdr-count').textContent = n + ' processo' + (n!==1?'s':'') + ' monitorado' + (n!==1?'s':'');
-
-  if (!filtered.length) {
-    document.getElementById('list').innerHTML =
-      '<div class="empty">' + (q ? 'Nenhum resultado para "' + esc(q) + '".' : 'Nenhum processo cadastrado.') + '</div>';
+function render(){
+  const q=(document.getElementById('search-input').value||'').toLowerCase();
+  const filtered=processos.map((p,i)=>({...p,idx:i})).filter(p=>!q||
+    p.numero.toLowerCase().includes(q)||
+    (p.vara||'').toLowerCase().includes(q)||
+    (p.cliente||p.nome||'').toLowerCase().includes(q));
+  const n=processos.length;
+  document.getElementById('count-badge').textContent=n;
+  document.getElementById('hdr-count').textContent=n+' processo'+(n!==1?'s':'')+' monitorado'+(n!==1?'s':'');
+  if(!filtered.length){
+    document.getElementById('list').innerHTML='<div class="empty">'+(q?'Nenhum resultado para "'+esc(q)+'".' :'Nenhum processo cadastrado.')+'</div>';
     return;
   }
-
-  const hasToken = !!getToken();
-  let h = '<table><thead><tr><th>#</th><th>Vara</th><th>Cliente</th><th>Numero do Processo</th><th></th></tr></thead><tbody>';
-  filtered.forEach((p, i) => {
-    const nome = esc(p.cliente || p.nome || '');
-    const vara = esc(p.vara || '-');
-    const num  = esc(p.numero);
-    const btn  = hasToken
-      ? '<button class="btn btn-danger" onclick="askRemove(' + p.idx + ')">Remover</button>'
-      : '<span style="font-size:.75rem;color:#bbb">Somente leitura</span>';
-    h += '<tr>' +
-      '<td class="n">' + (i+1) + '</td>' +
-      '<td class="vara"><span class="vara-chip">' + vara + '</span></td>' +
-      '<td class="cliente">' + nome + '</td>' +
-      '<td class="num">' + num + '</td>' +
-      '<td class="act">' + btn + '</td>' +
-      '</tr>';
+  const hasToken=!!getToken();
+  let h='<table><thead><tr><th>#</th><th>Vara</th><th>Cliente</th><th>Numero do Processo</th><th></th></tr></thead><tbody>';
+  filtered.forEach((p,i)=>{
+    const nome=esc(p.cliente||p.nome||'');
+    const vara=esc(p.vara||'-');
+    const num=esc(p.numero);
+    const btn=hasToken
+      ?'<button class="btn btn-danger" onclick="askRemove('+p.idx+')">Remover</button>'
+      :'<span style="font-size:.75rem;color:#bbb">Somente leitura</span>';
+    h+='<tr><td class="n">'+(i+1)+'</td><td class="vara"><span class="vara-chip">'+vara+'</span></td><td class="cliente">'+nome+'</td><td class="num">'+num+'</td><td class="act">'+btn+'</td></tr>';
   });
-  h += '</tbody></table>';
-  document.getElementById('list').innerHTML = h;
+  h+='</tbody></table>';
+  document.getElementById('list').innerHTML=h;
 }
 
-// ── Helpers ──────────────────────────────────────────────────────────────────
-function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') }
-
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 let toastT;
-function toast(msg, type) {
-  const el = document.getElementById('toast');
-  el.textContent = msg;
-  el.className = 'show' + (type ? ' '+type : '');
-  clearTimeout(toastT);
-  toastT = setTimeout(() => el.className = '', 3000);
+function toast(msg,type){
+  const el=document.getElementById('toast');
+  el.textContent=msg;el.className='show'+(type?' '+type:'');
+  clearTimeout(toastT);toastT=setTimeout(()=>el.className='',3000);
 }
-function setOverlay(v){ document.getElementById('overlay').classList.toggle('show', v) }
+function setOv(v){document.getElementById('overlay').classList.toggle('show',v);}
 
-// ── Init ─────────────────────────────────────────────────────────────────────
-updTokenUI();
-loadData();
-
-document.getElementById('modal').addEventListener('click', e => { if(e.target===e.currentTarget) closeModal(); });
-document.getElementById('inp-cliente').addEventListener('keydown', e => { if(e.key==='Enter') addProcesso(); });
+updToken();loadData();
+document.getElementById('modal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeModal();});
+document.getElementById('inp-cliente').addEventListener('keydown',e=>{if(e.key==='Enter')addProcesso();});
 </script>
 </body>
 </html>
