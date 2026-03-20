@@ -2,11 +2,11 @@ name: Boletim Diário de Liminares
 
 on:
   schedule:
-    - cron: '0 9 * * *'  # 09:00 UTC = 06:00 Brasília
-  workflow_dispatch:  # Permite rodar manualmente
+    - cron: '0 9 * * *' # 09:00 UTC = 06:00 Brasília
+  workflow_dispatch: # Permite rodar manualmente
 
 jobs:
-  enviar-boletim
+  enviar-boletim:
     runs-on: ubuntu-latest
     
     steps:
@@ -46,6 +46,7 @@ jobs:
             
             # Consulta à API do DataJud/CNJ
             BODY=$(printf '{"query":{"match":{"numeroProcesso":"%s"}}}' "$NUMERO")
+            
             RESPONSE=$(curl -s --max-time 30 \
               -X POST \
               "https://api-publica.datajud.cnj.jus.br/api_publica_tjpe/_search" \
@@ -58,8 +59,8 @@ jobs:
               
               if [ "$TOTAL_HITS" -gt "0" ]; then
                 ENCONTRADOS=$((ENCONTRADOS + 1))
-                ULTIMO=$(echo "$RESPONSE" | jq -r '.hits.hits[0]._source | 
-                  "\(.dataUltimaAtualizacao // "N/A" | .[0:10]) | \(.classeProcessual.nome // "N/A")"' 2>/dev/null || echo "dados indisponíveis")
+                ULTIMO=$(echo "$RESPONSE" | jq -r '.hits.hits[0]._source |
+                  "\(.dataUltimaAtualizacao // \"N/A\" | .[0:10]) | \(.classeProcessual.nome // \"N/A\")"' 2>/dev/null || echo "dados indisponíveis")
                 LISTA_OK="${LISTA_OK}\n✅ ${VARA} | ${CLIENTE}\n   📝 ${ULTIMO}"
               else
                 NAO_ENCONTRADOS=$((NAO_ENCONTRADOS + 1))
